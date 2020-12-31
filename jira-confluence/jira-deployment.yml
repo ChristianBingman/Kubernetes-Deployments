@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jira-deployment
+  namespace: jira
+  labels:
+    app: jira
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jira
+  template:
+    metadata:
+      labels:
+        app: jira
+    spec:
+      containers:
+      - name: jira
+        image: registry.acm.cs:31300/jira:1.1
+        ports:
+        - containerPort: 8080
+        env:
+        - name: ATL_DB_TYPE
+          value: mysql57
+        - name: ATL_JDBC_URL
+          value: jdbc:mysql://address=(protocol=tcp)(host=mysql)(port=3306)/jiradb?sessionVariables=default_storage_engine=InnoDB
+        - name: ATL_JDBC_USER
+          value: jirauser
+        - name: ATL_JDBC_PASSWORD
+          valueFrom:
+              secretKeyRef:
+                name: mysql-root-password
+                key: password
+        - name: ATL_DB_DRIVER
+          value: com.mysql.jdbc.Driver
+        volumeMounts:
+          - name: jira-mount
+            mountPath: /var/atlassian/application-data/jira
+      volumes:
+      - name: jira-mount
+        persistentVolumeClaim:
+          claimName: jira-pvc

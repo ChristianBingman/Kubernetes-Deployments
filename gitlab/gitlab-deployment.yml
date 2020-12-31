@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitlab-deployment
+  namespace: gitlab
+  labels:
+    app: gitlab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gitlab
+  template:
+    metadata:
+      labels:
+        app: gitlab
+    spec:
+      containers:
+      - name: gitlab
+        image: gitlab/gitlab-ce
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+        - name: ssh
+          containerPort: 22
+          protocol: TCP
+        env:
+        - name: GITLAB_OMNIBUS_CONFIG
+          value: "prometheus['monitor_kubernetes'] = false"
+        volumeMounts:
+          - name: gitlab-mount-conf
+            mountPath: /etc/gitlab
+          - name: gitlab-mount-logs
+            mountPath: /var/log/gitlab
+          - name: gitlab-mount-data
+            mountPath: /var/opt/gitlab
+      volumes:
+      - name: gitlab-mount-conf
+        persistentVolumeClaim:
+          claimName: gitlab-pvc-config
+      - name: gitlab-mount-logs
+        persistentVolumeClaim:
+          claimName: gitlab-pvc-logs
+      - name: gitlab-mount-data
+        persistentVolumeClaim:
+          claimName: gitlab-pvc-data

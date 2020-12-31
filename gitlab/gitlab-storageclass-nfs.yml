@@ -1,0 +1,6 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: gitlab-nfs-class
+  namespace: gitlab
+provisioner: kubernetes.io/fake-nfs

@@ -1,0 +1,16 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: gitlab-pvc-logs
+  namespace: gitlab
+spec:
+  selector:
+    matchLabels:
+      app: gitlab
+      volume: logs
+  storageClassName: gitlab-nfs-class
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 4Gi

@@ -1,0 +1,16 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: docker-pvc-registry
+  namespace: docker
+spec:
+  selector:
+    matchLabels:
+      app: docker
+      volume: registry
+  storageClassName: docker-nfs-class
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi

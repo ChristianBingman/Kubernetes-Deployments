@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment
+  namespace: jira
+  labels:
+    app: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:5.7
+          args: ["--default-storage-engine=INNODB", "--character_set_server=utf8mb4", "--innodb_default_row_format=DYNAMIC", "--innodb_large_prefix=ON", "--innodb_file_format=Barracuda", "--innodb_log_file_size=1G"]
+          ports:
+            - containerPort: 3306
+          env:
+          - name: MYSQL_DATABASE
+            value: jiradb
+          - name: MYSQL_USER
+            value: jirauser
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-root-password
+                key: password
+          - name: MYSQL_RANDOM_ROOT_PASSWORD
+            value: "yes"
+          volumeMounts:
+          - name: mysql-mount
+            mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-mount
+        persistentVolumeClaim:
+          claimName: mysql-pvc

@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: gitlab-pv-config
+  labels:
+    app: gitlab
+    volume: config
+spec:
+  storageClassName: gitlab-nfs-class
+  capacity:
+    storage: 1Gi
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: "/var/share/kubernetesFiles/gitlab/config"
+    server: 172.29.1.73
+    readOnly: false

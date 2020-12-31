@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: gitlab-pv-data
+  labels:
+    app: gitlab
+    volume: data
+spec:
+  storageClassName: gitlab-nfs-class
+  capacity:
+    storage: 15Gi
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: "/var/share/kubernetesFiles/gitlab/data"
+    server: 172.29.1.73
+    readOnly: false

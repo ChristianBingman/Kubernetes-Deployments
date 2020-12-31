@@ -1,0 +1,15 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ghost-pvc
+  namespace: ghost
+spec:
+  selector:
+    matchLabels:
+      app: ghost
+  storageClassName: ghost-nfs-class
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 3Gi

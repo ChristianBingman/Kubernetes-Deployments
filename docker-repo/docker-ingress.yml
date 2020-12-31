@@ -1,0 +1,17 @@
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: docker-ingress
+#   namespace: docker
+# spec:
+#   rules:
+#   - host: registry.acm.cs
+#     http:
+#       paths:
+#         - path: /
+#           pathType: Prefix
+#           backend:
+#             service:
+#               name: docker-service
+#               port:
+#                 number: 5000

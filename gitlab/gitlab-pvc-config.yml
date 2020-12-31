@@ -1,0 +1,16 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: gitlab-pvc-config
+  namespace: gitlab
+spec:
+  selector:
+    matchLabels:
+      app: gitlab
+      volume: config
+  storageClassName: gitlab-nfs-class
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
